@@ -4,18 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeuxvideo.pi | Future Gaming Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --pi-gold: #ffaa00;
-            --pi-light: #ffd480;
-            --bg-dark: #0a0a0c;
-            --glass: rgba(255, 255, 255, 0.05);
+            --pi-glow: rgba(255, 170, 0, 0.3);
+            --bg-dark: #080808;
+            --card-bg: #111111;
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at top right, #1a1a2e, transparent);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 170, 0, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(88, 101, 242, 0.05) 0%, transparent 40%);
             color: #ffffff;
             display: flex;
             justify-content: center;
@@ -26,103 +29,135 @@
         }
 
         .container {
-            padding: 40px 30px;
-            max-width: 500px;
+            padding: 50px 30px;
+            max-width: 550px;
             width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #222;
             border-radius: 24px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            background: var(--card-bg);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Petit effet de ligne lumineuse en haut */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--pi-gold), transparent);
         }
 
         h1 { 
-            font-size: 2.8em; 
-            margin-bottom: 20px;
-            letter-spacing: -1px;
-        }
-
-        .domain { 
-            background: linear-gradient(to bottom, #fff, var(--pi-gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 3em; 
+            margin-bottom: 30px; 
+            letter-spacing: -2px;
             font-weight: 800;
         }
 
-        .content-section {
-            margin-bottom: 30px;
+        .domain { 
+            color: #fff;
+            text-shadow: 0 0 20px var(--pi-glow);
         }
 
-        p { line-height: 1.6; color: #e0e0e0; font-size: 1.05em; }
+        .pi-text { color: var(--pi-gold); }
+
+        p { line-height: 1.7; color: #bcbcbc; font-size: 1.05em; }
 
         /* Séparation visuelle stylisée */
         .divider {
-            height: 1px;
-            width: 60px;
+            margin: 35px auto;
+            width: 50px;
+            height: 3px;
             background: var(--pi-gold);
-            margin: 30px auto;
-            opacity: 0.5;
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--pi-glow);
         }
 
         .english-section { 
             font-size: 0.95em; 
-            color: #aaa;
+            color: #777;
             font-style: italic;
         }
 
-        /* Liens en bas */
-        .social-links {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-top: 40px;
+        .signature {
+            margin-top: 15px;
+            font-size: 0.8em;
+            color: #555;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        @media (min-width: 400px) {
-            .social-links { grid-template-columns: repeat(3, 1fr); }
+        .verified-user { color: var(--pi-gold); font-weight: bold; }
+
+        /* Liens placés en bas de page */
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 45px;
+        }
+
+        @media (min-width: 450px) {
+            .social-links { flex-direction: row; justify-content: center; }
         }
 
         .contact-btn {
-            padding: 14px;
+            flex: 1;
+            padding: 14px 20px;
             color: #fff;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             font-size: 0.85em;
-            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .contact-btn:hover { 
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            filter: brightness(1.2);
         }
 
-        .btn-tg { background: #0088cc22; color: #0088cc; border-color: #0088cc44; }
-        .btn-reddit { background: #FF450022; color: #FF4500; border-color: #FF450044; }
-        .btn-discord { background: #5865F222; color: #5865F2; border-color: #5865F244; }
-
-        .btn-tg:hover { background: #0088cc; color: #fff; }
-        .btn-reddit:hover { background: #FF4500; color: #fff; }
-        .btn-discord:hover { background: #5865F2; color: #fff; }
-
-        .footer-info {
-            margin-top: 25px;
-            font-size: 0.75em;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .verified { color: var(--pi-gold); font-weight: bold; }
+        .btn-tg { background-color: #0088cc; } 
+        .btn-reddit { background-color: #FF4500; } 
+        .btn-discord { background-color: #5865F2; } 
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1><span class="domain">jeuxvideo.pi</span></h1>
+        <h1><span class="domain">jeuxvideo<span class="pi-text">.pi</span></span></h1>
     </header>
     
-    <div class="content
+    <section class="french">
+        <p><strong>Le futur portail Gaming de référence</strong></p>
+        <p>Ce domaine premium est prêt pour le déploiement d'un écosystème majeur sur Pi Network. Nous recherchons des développeurs et des studios visionnaires.</p>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="english-section">
+        <p>The ultimate gaming hub for the Pi Network ecosystem. Open for strategic partnerships, developer collaborations and licensing.</p>
+    </section>
+
+    <div class="signature">
+        Verified Owner: <span class="verified-user">@WadCox</span>
+    </div>
+
+    <div class="social-links">
+        <a href="https://t.me/Wadcox" target="_blank" class="contact-btn btn-tg">Telegram</a>
+        <a href="https://www.reddit.com/user/WadCox" target="_blank" class="contact-btn btn-reddit">Reddit</a>
+        <a href="https://discord.gg/6hzZuv3bxR" target="_blank" class="contact-btn btn-discord">Discord</a>
+    </div>
+</div>
+
+</body>
+</html>
