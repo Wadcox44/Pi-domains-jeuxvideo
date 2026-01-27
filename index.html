@@ -151,6 +151,23 @@
         Verified Owner: @WadCox
     </div>
 </div>
-
+<script>
+  const form = document.querySelector('.contact-form');
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (response.ok) {
+      form.innerHTML = "<p style='color: #ffaa00; font-weight: bold; text-align: center; padding: 20px;'>✓ Votre message a été envoyé avec succès ! Je vous répondrai très prochainement.</p>";
+    } else {
+      alert("Oups ! Il y a eu un problème. Veuillez réessayer ou utiliser Discord.");
+    }
+  };
+</script>
 </body>
 </html>
+
