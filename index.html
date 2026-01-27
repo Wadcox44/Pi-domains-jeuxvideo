@@ -5,88 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeuxvideo.pi | Future Gaming Hub</title>
     <style>
+        :root {
+            --pi-gold: #ffaa00;
+            --pi-light: #ffd480;
+            --bg-dark: #0a0a0c;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0d0d0d;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at top right, #1a1a2e, transparent);
             color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            padding: 40px 30px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             text-align: center;
         }
-        .container {
-            padding: 30px;
-            max-width: 600px;
-            border: 1px solid #333;
-            border-radius: 20px;
-            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+
+        h1 { 
+            font-size: 2.8em; 
+            margin-bottom: 20px;
+            letter-spacing: -1px;
         }
-        h1 { color: #ffaa00; font-size: 2.5em; margin-bottom: 10px; }
-        .domain { font-weight: bold; color: #ffffff; }
-        p { line-height: 1.6; color: #cccccc; }
-        
+
+        .domain { 
+            background: linear-gradient(to bottom, #fff, var(--pi-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .content-section {
+            margin-bottom: 30px;
+        }
+
+        p { line-height: 1.6; color: #e0e0e0; font-size: 1.05em; }
+
+        /* Séparation visuelle stylisée */
+        .divider {
+            height: 1px;
+            width: 60px;
+            background: var(--pi-gold);
+            margin: 30px auto;
+            opacity: 0.5;
+        }
+
+        .english-section { 
+            font-size: 0.95em; 
+            color: #aaa;
+            font-style: italic;
+        }
+
+        /* Liens en bas */
         .social-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 12px;
-            margin: 25px 0;
+            margin-top: 40px;
+        }
+
+        @media (min-width: 400px) {
+            .social-links { grid-template-columns: repeat(3, 1fr); }
         }
 
         .contact-btn {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
+            padding: 14px;
             color: #fff;
             text-decoration: none;
-            font-weight: bold;
-            border-radius: 8px;
-            transition: transform 0.2s, background-color 0.3s;
-            font-size: 0.9em;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.85em;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .contact-btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+        .contact-btn:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
 
-        .btn-tg { background-color: #0088cc; } 
-        .btn-reddit { background-color: #FF4500; } 
-        .btn-discord { background-color: #5865F2; } 
+        .btn-tg { background: #0088cc22; color: #0088cc; border-color: #0088cc44; }
+        .btn-reddit { background: #FF450022; color: #FF4500; border-color: #FF450044; }
+        .btn-discord { background: #5865F222; color: #5865F2; border-color: #5865F244; }
 
-        hr { margin: 25px 0; border: 0; border-top: 1px solid #333; }
-        .signature { font-size: 0.85em; color: #888; margin-bottom: 5px; }
-        .english-section { font-size: 0.85em; font-style: italic; opacity: 0.7; }
+        .btn-tg:hover { background: #0088cc; color: #fff; }
+        .btn-reddit:hover { background: #FF4500; color: #fff; }
+        .btn-discord:hover { background: #5865F2; color: #fff; }
+
+        .footer-info {
+            margin-top: 25px;
+            font-size: 0.75em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .verified { color: var(--pi-gold); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1><span class="domain">Jeuxvideo.pi</span></h1>
+    <header>
+        <h1><span class="domain">jeuxvideo.pi</span></h1>
+    </header>
     
-    <section class="french">
-        <p><strong>Le futur portail Gaming de l'écosystème Pi</strong></p>
-        <p>Ce domaine premium est réservé au développement d'un hub de référence. Nous recherchons des développeurs et partenaires stratégiques.</p>
-    </section>
-
-    <div class="social-links">
-        <a href="https://t.me/Wadcox" target="_blank" class="contact-btn btn-tg">Telegram</a>
-
-        <a href="https://www.reddit.com/user/WadCox" target="_blank" class="contact-btn btn-reddit">Reddit</a>
-
-        <a href="https://discord.gg/6hzZuv3bxR" target="_blank" class="contact-btn btn-discord">Discord Wadcox</a>
-    </div>
-
-    <div class="signature">
-        Propriétaire vérifié : <strong>@WadCox</strong> (Pi Network)
-    </div>
-
-    <hr>
-
-    <section class="english-section">
-        <p>Premium domain for the Pi Network gaming ecosystem. We are open to strategic partnerships with developers and studios.</p>
-    </section>
-</div>
-
-</body>
-</html>
+    <div class="content
