@@ -72,9 +72,9 @@
         .submit-btn {
     width: 100%;
     padding: 12px;
-    background: transparent; /* Fond transparent */
-    color: #ffffff; /* Texte blanc */
-    border: 1px solid #444; /* Bordure grise discrète */
+    background: transparent; /* Fond vide */
+    color: var(--pi-gold); /* Texte en Jaune Or */
+    border: 2px solid var(--pi-gold); /* Contour en Jaune Or */
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
@@ -82,8 +82,7 @@
 }
 
 .submit-btn:hover {
-    background: #222; /* Devient un peu plus clair au survol */
-    border-color: var(--pi-gold); /* La bordure devient Or au survol */
+    background: rgba(255, 170, 0, 0.1); /* Léger fond doré au survol */
     transform: translateY(-2px);
 }
 
@@ -117,6 +116,22 @@
         .btn-discord:hover { background: #5865F2; color: #fff; }
 
         .footer-info { margin-top: 20px; font-size: 0.7em; color: #444; }
+        /* Animation de pulsation lumineuse */
+@keyframes pulse-gold {
+    0% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 170, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0); }
+}
+
+#pay_button {
+    animation: pulse-gold 2s infinite; /* Applique l'effet en continu */
+    transition: 0.3s;
+}
+
+#pay_button:hover {
+    transform: scale(1.05); /* Grossit légèrement au survol */
+    background: #ffcc66;
+}
     </style>
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script>
@@ -204,6 +219,7 @@
 </script>
 </body>
 </html>
+
 
 
 
