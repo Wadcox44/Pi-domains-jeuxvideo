@@ -222,8 +222,25 @@
     }
   };
 </script>
+    <script>
+  document.getElementById('pay_button').addEventListener('click', async function() {
+    try {
+      // Cette fonction appelle le Pi Browser
+      const payment = await Pi.createPayment({
+        amount: 1, 
+        memo: "Soutien pour jeuxvideo.pi",
+        metadata: { type: "donation" },
+      });
+      console.log("Paiement réussi");
+    } catch (error) {
+      // Si ça ne marche pas, l'erreur s'affiche ici
+      alert("Le SDK n'est pas encore prêt ou configuré dans develop.pi");
+    }
+  });
+</script>
 </body>
 </html>
+
 
 
 
