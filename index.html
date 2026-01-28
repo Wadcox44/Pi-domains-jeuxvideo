@@ -14,18 +14,16 @@
             --input-bg: #1a1a1a;
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 10% 20%, rgba(255, 170, 0, 0.05) 0%, transparent 40%);
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
+      body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Aligne en haut */
+    margin: 0;
+    padding-top: 5px; /* Réduit l'espace tout en haut au strict minimum */
+}
 
         .container {
     padding: 15px 30px 40px 30px; /* On descend à 15px seulement en haut */
@@ -38,7 +36,13 @@
     text-align: center;
 }
 
-        h1 { font-size: 2.5em; margin-bottom: 20px; font-weight: 800; }
+        h1 { 
+    font-size: 2.5em; 
+    margin-top: 0 !important; /* Force la suppression de l'espace haut */
+    padding-top: 0; 
+    margin-bottom: 15px; 
+    font-weight: 800; 
+}
         .pi-text { color: var(--pi-gold); }
         p { color: #bcbcbc; line-height: 1.6; }
 
@@ -220,6 +224,7 @@
 </script>
 </body>
 </html>
+
 
 
 
