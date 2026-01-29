@@ -148,9 +148,9 @@
       };
 
       // Authentification
-      const user = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound)
-        .catch(e => { alert("Erreur Auth : " + e); });
-      
+     const user = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound)
+                   .catch(err => { alert("L'erreur est : " + JSON.stringify(err)); });
+        
       if(user) {
           alert("Etape 3 : Bonjour " + user.user.username);
       }
@@ -177,4 +177,5 @@
 
 </body>
 </html>
+
 
