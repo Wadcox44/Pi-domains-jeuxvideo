@@ -119,8 +119,6 @@
         <button id="pay_button">Donner 1 Pi pour le projet</button>
     </div>
 
-    <div class="divider"></div>
-
     <p style="font-size: 0.85em; color: #777; font-style: italic; margin-top: 20px;">
         Building the ultimate gaming hub. Open for partnerships.
     </p>
@@ -137,28 +135,39 @@
 </div>
 
 <script>
+    // Initialisation
     const Pi = window.Pi;
     Pi.init({ version: "2.0", sandbox: true });
 
     document.getElementById('pay_button').onclick = async function() {
+        alert("Etape 1 : Bouton cliqué");
         try {
-            alert("Vérification de l'identité...");
-            const user = await Pi.authenticate(['payments', 'username'], function(p){});
+            // Utilisation d'une fonction de rappel (callback) plus robuste
+            const scopes = ['payments', 'username'];
             
-            alert("Bonjour " + user.user.username + " ! Ouverture du Wallet...");
+            function onIncompletePaymentFound(payment) {
+                alert("Paiement incomplet trouvé : " + payment.identifier);
+            };
+
+            alert("Etape 2 : Demande d'authentification...");
+            
+            const user = await Pi.authenticate(scopes, onIncompletePaymentFound);
+            
+            alert("Etape 3 : Bonjour " + user.user.username);
 
             const payment = await Pi.createPayment({
                 amount: 1,
                 memo: "Don pour jeuxvideo.pi",
                 metadata: { type: "donation" },
             }, {
-                onReadyForServerApproval: function(id) { alert("Paiement initié ! ID: " + id); },
-                onReadyForServerCompletion: function(id, tx) { alert("Etape 10 validée !"); },
+                onReadyForServerApproval: function(id) { alert("Etape 4 : Paiement approuvé ! ID: " + id); },
+                onReadyForServerCompletion: function(id, tx) { alert("Etape 5 : Succès final !"); },
                 onCancel: function(id) { alert("Paiement annulé."); },
-                onError: function(e) { alert("Erreur SDK : " + e.message); }
+                onError: function(e) { alert("Erreur Paiement : " + e.message); }
             });
         } catch (error) {
-            alert("Erreur : " + error.message);
+            alert("DÉTAIL ERREUR : " + error.message);
+            console.error(error);
         }
     };
 </script>
