@@ -143,34 +143,32 @@
     try {
       alert("Début de l'Etape 2...");
       
-      // La fonction de sécurité obligatoire
       const onIncompletePaymentFound = (payment) => { 
         console.log("Paiement à finaliser", payment); 
       };
 
-      // L'AUTHENTIFICATION (C'est ici que ça bloquait)
       const user = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
-      
-      // SI CA MARCHE, ON ARRIVE ICI :
       alert("Etape 3 : Bonjour " + user.user.username);
 
-      // 3. LANCEMENT DU PAIEMENT
       const payment = await Pi.createPayment({
         amount: 1,
         memo: "Don pour mon projet",
-        metadata: { productId: "1234" },
+        metadata: { productId: "don_" + Date.now() },
       }, {
-        onReadyForServerApproval: (paymentId) => { console.log("Approuvé"); },
-        onReadyForServerCompletion: (paymentId, txid) => { alert("Paiement fini !"); },
-        onCancel: (paymentId) => { alert("Paiement annulé"); },
-        onError: (error, payment) => { alert("Erreur paiement"); },
+        onReadyForServerApproval: (paymentId) => { 
+            alert("Etape 4 : Paiement approuvé ! ID: " + paymentId); 
+        },
+        onReadyForServerCompletion: (paymentId, txid) => { 
+            alert("Etape 5 : Succès final !"); 
+        },
+        onCancel: (paymentId) => { alert("Paiement annulé."); },
+        onError: (error, payment) => { alert("Erreur : " + error.message); },
       });
 
     } catch (err) {
-      // Si l'étape 2 échoue, ce message te dira ENFIN pourquoi
       alert("ERREUR : " + err.message);
-    }
   }
+      
     document.getElementById('pay_button').addEventListener('click', donnerPi);
 </script>
 
