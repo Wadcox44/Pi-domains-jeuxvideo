@@ -163,23 +163,27 @@
       // 3. LANCEMENT DU PAIEMENT
       const payment = await Pi.createPayment({
         amount: 1,
-        memo: "Soutien Projet JeuxVideo", // Change le texte du mémo
-        metadata: { productId: "order_" + Date.now() }, // Le "Date.now()" rend l'ID unique à chaque seconde
+        memo: "Don pour mon projet",
+        metadata: { productId: "1234" },
       }, {
-        onReadyForServerApproval: (id) => { 
-          alert("Paiement créé ! ID: " + id); 
-          // Note: Sans serveur pour approuver, le paiement s'arrêtera ici en Mainnet
-        },
-        onReadyForServerCompletion: (id, tx) => { alert("Succès !"); },
-        onCancel: (id) => { alert("Annulé"); },
-        onError: (err) => { alert("Erreur : " + err.message); },
+        onReadyForServerApproval: (paymentId) => { console.log("Approuvé"); },
+        onReadyForServerCompletion: (paymentId, txid) => { alert("Paiement fini !"); },
+        onCancel: (paymentId) => { alert("Paiement annulé"); },
+        onError: (error, payment) => { alert("Erreur paiement"); },
       });
+
+    } catch (err) {
+      // Si l'étape 2 échoue, ce message te dira ENFIN pourquoi
+      alert("ERREUR : " + err.message);
+    }
+  }
         
     document.getElementById('pay_button').addEventListener('click', donnerPi);
 </script>
 
 </body>
 </html>
+
 
 
 
