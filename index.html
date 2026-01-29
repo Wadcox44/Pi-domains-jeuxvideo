@@ -177,6 +177,8 @@
     </div>
 
     <script>
+  alert("Le script est bien chargé !"); // Ajoute cette ligne ici
+  const Pi = window.Pi;
       document.getElementById('pay_button').addEventListener('click', async function() {
         try {
           const payment = await Pi.createPayment({
@@ -249,6 +251,7 @@
     </script>
 </body>
 </html>
+
 
 
 
