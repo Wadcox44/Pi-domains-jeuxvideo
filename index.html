@@ -48,55 +48,31 @@
     const Pi = window.Pi;
     Pi.init({ version: "2.0", sandbox: true });
 
-    const statusBox = document.getElementById('status-box');
-    const payButton = document.getElementById('pay_button');
-
-    // Désactive le bouton tant qu'on n'est pas connecté
-    payButton.disabled = true;
-    payButton.style.opacity = "0.5";
-
-    async function authUser() {
+    async function lancerPaiement() {
         try {
-            statusBox.innerHTML = "Demande d'autorisation...";
-            // On demande explicitement les scopes ici
-            const auth = await Pi.authenticate(['payments', 'username'], onIncompletePaymentFound);
+            // On demande l'auth, mais comme c'est déjà fait, ça devrait passer direct
+            await Pi.authenticate(['payments', 'username'], function(p){});
             
-            statusBox.innerHTML = "Connecté : " + auth.user.username;
-            statusBox.style.color = "#ffaa00";
-            
-            // On réactive le bouton une fois connecté
-            payButton.disabled = false;
-            payButton.style.opacity = "1";
-        } catch (err) {
-            statusBox.innerHTML = "Erreur d'authentification : " + err.message;
-            console.error(err);
+            // On lance le paiement immédiatement
+            const payment = await Pi.createPayment({
+                amount: 1, 
+                memo: "Test Etape 10",
+                metadata: { type: "test" },
+            }, {
+                onReadyForServerApproval: function(id) { console.log("Approuvé"); },
+                onReadyForServerCompletion: function(id, tx) { alert("Paiement réussi !"); },
+                onCancel: function(id) { },
+                onError: function(e) { alert("Erreur : " + e.message); }
+            });
+        } catch (error) {
+            console.error(error);
         }
     }
 
-    function onIncompletePaymentFound(payment) {
-        console.log("Paiement incomplet :", payment);
-    };
-
-    payButton.addEventListener('click', async function() {
-        try {
-            const payment = await Pi.createPayment({
-                amount: 1, //
-                memo: "Soutien jeuxvideo.pi",
-                metadata: { type: "donation" },
-            }, {
-                onReadyForServerApproval: function(id) { console.log("Approbation..."); },
-                onReadyForServerCompletion: function(id, tx) { statusBox.innerHTML = "Merci pour votre don !"; },
-                onCancel: function(id) { statusBox.innerHTML = "Paiement annulé"; },
-                onError: function(e) { statusBox.innerHTML = "Erreur : " + e.message; }
-            });
-        } catch (error) {
-            alert("Erreur : " + error.message);
-        }
-    });
-
-    // Lancer l'auth dès le chargement
-    authUser();
+    // On lie cette fonction directement au bouton
+    document.getElementById('pay_button').onclick = lancerPaiement;
 </script>
 </body>
 </html>
+
 
