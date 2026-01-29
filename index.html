@@ -222,41 +222,34 @@
     }
   };
 </script>
-    <script>
-  const Pi = window.Pi;
-  Pi.init({ version: "2.0", sandbox: true });
+    </div> <script>
+      const Pi = window.Pi;
+      Pi.init({ version: "2.0", sandbox: true });
 
-  // 1. On demande l'autorisation dès l'ouverture
-  async function authentifier() {
-    try {
-      await Pi.authenticate(['payments', 'username'], function(p){});
-      console.log("Auth OK");
-    } catch (e) {
-      console.error("Erreur Auth", e);
-    }
-  }
-  authentifier();
-
-  // 2. Gestion du clic de paiement
-  document.getElementById('pay_button').addEventListener('click', async function() {
-    try {
-      const payment = await Pi.createPayment({
-        amount: 1,
-        memo: "Soutien pour jeuxvideo.pi",
-        metadata: { type: "donation" },
-      }, {
-        onReadyForServerApproval: function(id) { alert("Paiement initié ! ID: " + id); },
-        onReadyForServerCompletion: function(id, tx) { alert("Etape 10 validée !"); },
-        onCancel: function(id) { },
-        onError: function(e) { alert("Erreur SDK : " + e.message); }
-      });
-    } catch (error) {
-      alert("Erreur critique : " + error.message);
-    }
-  });
-</script>
-    </body>
+      document.getElementById('pay_button').onclick = async function() {
+        try {
+          // 1. On demande l'autorisation au clic
+          const user = await Pi.authenticate(['payments', 'username'], function(p){});
+          
+          // 2. Si l'autorisation est OK, on lance le paiement
+          const payment = await Pi.createPayment({
+            amount: 1,
+            memo: "Soutien pour jeuxvideo.pi",
+            metadata: { type: "donation" },
+          }, {
+            onReadyForServerApproval: function(id) { alert("Paiement initié ! ID: " + id); },
+            onReadyForServerCompletion: function(id, tx) { alert("Etape 10 validée !"); },
+            onCancel: function(id) { },
+            onError: function(e) { alert("Erreur SDK : " + e.message); }
+          });
+        } catch (error) {
+          alert("Erreur : " + error.message);
+        }
+      };
+    </script>
+</body>
 </html>
+
 
 
 
