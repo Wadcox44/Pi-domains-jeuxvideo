@@ -14,135 +14,76 @@
             --input-bg: #1a1a1a;
         }
 
-      body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-dark);
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Aligne en haut */
-    margin: 0;
-    padding-top: 5px; /* Réduit l'espace tout en haut au strict minimum */
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 0;
+            padding-top: 5px;
+        }
 
         .container {
-    padding: 15px 30px 40px 30px; /* On descend à 15px seulement en haut */
-    max-width: 550px;
-    width: 100%;
-    border: 1px solid #222;
-    border-radius: 24px;
-    background: var(--card-bg);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-    text-align: center;
-}
+            padding: 15px 30px 40px 30px;
+            max-width: 550px;
+            width: 100%;
+            border: 1px solid #222;
+            border-radius: 24px;
+            background: var(--card-bg);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            text-align: center;
+        }
 
-        h1 { 
-    font-size: 2.5em; 
-    margin-top: 0 !important; /* Force la suppression de l'espace haut */
-    padding-top: 0; 
-    margin-bottom: 15px; 
-    font-weight: 800; 
-}
+        h1 { font-size: 2.5em; margin-top: 0 !important; margin-bottom: 15px; font-weight: 800; }
         .pi-text { color: var(--pi-gold); }
         p { color: #bcbcbc; line-height: 1.6; }
 
-        /* Styles du Formulaire */
         .contact-form {
-    margin-top: 30px;
-    text-align: left;
-    background: rgba(255, 255, 255, 0.03); /* Un fond légèrement plus clair */
-    padding: 25px; /* Plus d'espace intérieur pour respirer */
-    border-radius: 18px;
-    border: 1px solid rgba(255, 170, 0, 0.2); /* Cadre Or très discret (20% d'opacité) */
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5); /* Effet de profondeur à l'intérieur */
-}
-
-        .form-group { margin-bottom: 15px; }
-
-        label { display: block; font-size: 0.8em; color: var(--pi-gold); margin-bottom: 5px; text-transform: uppercase; font-weight: bold; }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            background: var(--input-bg);
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: #fff;
-            font-family: inherit;
-            box-sizing: border-box;
+            margin-top: 30px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 25px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 170, 0, 0.2);
         }
 
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.8em; color: var(--pi-gold); margin-bottom: 5px; text-transform: uppercase; font-weight: bold; }
+        input, textarea { width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid #333; border-radius: 8px; color: #fff; box-sizing: border-box; }
         textarea { height: 80px; resize: none; }
 
         .submit-btn {
-    width: 100%;
-    padding: 12px;
-    background: transparent; /* Fond vide */
-    color: var(--pi-gold); /* Texte en Jaune Or */
-    border: 2px solid var(--pi-gold); /* Contour en Jaune Or */
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.submit-btn:hover {
-    background: rgba(255, 170, 0, 0.1); /* Léger fond doré au survol */
-    transform: translateY(-2px);
-}
-
-        .divider { margin: 30px auto; width: 40px; height: 2px; background: #333; }
-
-        .social-links {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-            justify-content: center;
-        }
-
-        .contact-btn {
-            padding: 10px 15px;
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: var(--pi-gold);
+            border: 2px solid var(--pi-gold);
             border-radius: 8px;
-            font-size: 0.8em;
-            flex: 1;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 170, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0); }
+        }
+
+        #pay_button {
+            animation: pulse-gold 2s infinite;
+            transition: 0.3s;
+            width: 100%; padding: 12px; background: var(--pi-gold); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
+        }
+
+        .social-links { display: flex; gap: 10px; margin-top: 25px; justify-content: center; }
+        .contact-btn { padding: 10px 15px; color: #fff; text-decoration: none; border-radius: 8px; font-size: 0.8em; flex: 1; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         .btn-tg { background: #0088cc22; color: #0088cc; }
-        .btn-reddit { background: #FF450022; color: #FF4500; }
         .btn-discord { background: #5865F222; color: #5865F2; }
-
-        .btn-tg:hover { background: #0088cc; color: #fff; }
-        .btn-reddit:hover { background: #FF4500; color: #fff; }
-        .btn-discord:hover { background: #5865F2; color: #fff; }
-
-        .footer-info { margin-top: 20px; font-size: 0.7em; color: #444; }
-        /* Animation de pulsation lumineuse */
-@keyframes pulse-gold {
-    0% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0.7); }
-    70% { box-shadow: 0 0 0 15px rgba(255, 170, 0, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0); }
-}
-
-#pay_button {
-    animation: pulse-gold 2s infinite; /* Applique l'effet en continu */
-    transition: 0.3s;
-}
-
-#pay_button:hover {
-    transform: scale(1.05); /* Grossit légèrement au survol */
-    background: #ffcc66;
-}
     </style>
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <script>
-      Pi.init({ version: "2.0", sandbox: true });
-    </script>
-</head>
 </head>
 <body>
 
@@ -150,124 +91,59 @@
     <h1>jeuxvideo<span class="pi-text">.pi</span></h1>
     
     <div style="margin-bottom: 25px;">
-        <a href="2048/index.html" style="display: inline-block; padding: 12px 25px; background-color: #6c5ce7; color: white; text-decoration: none; border-radius: 12px; font-weight: bold; font-family: sans-serif; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4); transition: 0.3s;">
+        <a href="2048/index.html" style="display: inline-block; padding: 12px 25px; background-color: #6c5ce7; color: white; text-decoration: none; border-radius: 12px; font-weight: bold; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);">
             🎮 CLIQUE ICI POUR JOUER (BETA)
         </a>
     </div>
     
     <p><strong>Portail Gaming Pi Network</strong></p>
-    <p style="font-size: 0.9em;">Développeurs, studios ou partenaires ? <br>Envoyez-moi un message direct ci-dessous.</p>
 
     <form action="https://formspree.io/f/xwvoaroz" method="POST" class="contact-form">
         <div class="form-group">
             <label>Votre Email</label>
-            <input type="email" name="email" placeholder="email@exemple.com" required>
+            <input type="email" name="email" required>
         </div>
         <div class="form-group">
             <label>Message / Projet</label>
-            <textarea name="message" placeholder="Parlez-moi de votre projet ou proposition..." required></textarea>
+            <textarea name="message" required></textarea>
         </div>
         <button type="submit" class="submit-btn">Envoyer la proposition</button>
     </form>
-<div style="margin-top: 20px; border: 1px dashed #ffaa00; padding: 15px; border-radius: 15px; background: rgba(255,170,0,0.05);">
+
+    <div style="margin-top: 20px; border: 1px dashed #ffaa00; padding: 15px; border-radius: 15px; background: rgba(255,170,0,0.05);">
         <p style="font-size: 0.8em; color: #ffaa00; margin-bottom: 10px;">Soutenez le développement du Hub</p>
-        <button id="pay_button" style="width: 100%; padding: 12px; background: var(--pi-gold); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-    Donner 1 Pi pour le projet
-</button>
+        <button id="pay_button">Donner 1 Pi pour le projet</button>
     </div>
-
-    <script>
-  alert("Le script est bien chargé !"); // Ajoute cette ligne ici
-  const Pi = window.Pi;
-      document.getElementById('pay_button').addEventListener('click', async function() {
-        try {
-          const payment = await Pi.createPayment({
-            amount: 1,
-            memo: "Soutien pour jeuxvideo.pi",
-            metadata: { type: "donation" },
-          });
-          console.log("Paiement initié");
-        } catch (error) {
-          console.error("Erreur de paiement", error);
-        }
-      });
-    </script>
-    <div class="divider"></div>
-
-    <p style="font-size: 0.85em; color: #777; font-style: italic;">
-        Building the ultimate gaming hub. Open for partnerships.
-    </p>
 
     <div class="social-links">
         <a href="https://t.me/Wadcox" target="_blank" class="contact-btn btn-tg">Telegram</a>
-        <a href="https://www.reddit.com/user/WadCox" target="_blank" class="contact-btn btn-reddit">Reddit</a>
         <a href="https://discord.gg/6hzZuv3bxR" target="_blank" class="contact-btn btn-discord">Discord</a>
     </div>
+</div>
 
-    <div class="footer-info">
-        Verified Owner: @WadCox
-    </div>
 <script>
-  const form = document.querySelector('.contact-form');
-  form.onsubmit = async (e) => {
-    e.preventDefault();
-    const data = new FormData(form);
-    const response = await fetch(form.action, {
-      method: 'POST',
-      body: data,
-      headers: { 'Accept': 'application/json' }
-    });
-    if (response.ok) {
-      form.innerHTML = "<p style='color: #ffaa00; font-weight: bold; text-align: center; padding: 20px;'>✓ Votre message a été envoyé avec succès ! Je vous répondrai très prochainement.</p>";
-    } else {
-      alert("Oups ! Il y a eu un problème. Veuillez réessayer ou utiliser Discord.");
-    }
-  };
-</script>
-    </div> <script>
-      const Pi = window.Pi;
-      Pi.init({ version: "2.0", sandbox: true });
+    // Initialisation UNIQUE du SDK
+    const Pi = window.Pi;
+    Pi.init({ version: "2.0", sandbox: true });
 
-      document.getElementById('pay_button').onclick = async function() {
+    // Gestion UNIQUE du bouton de paiement
+    document.getElementById('pay_button').onclick = async function() {
         try {
-          // 1. On demande l'autorisation au clic
-          const user = await Pi.authenticate(['payments', 'username'], function(p){});
-          
-          // 2. Si l'autorisation est OK, on lance le paiement
-          const payment = await Pi.createPayment({
-            amount: 1,
-            memo: "Soutien pour jeuxvideo.pi",
-            metadata: { type: "donation" },
-          }, {
-            onReadyForServerApproval: function(id) { alert("Paiement initié ! ID: " + id); },
-            onReadyForServerCompletion: function(id, tx) { alert("Etape 10 validée !"); },
-            onCancel: function(id) { },
-            onError: function(e) { alert("Erreur SDK : " + e.message); }
-          });
+            alert("Vérification de l'identité...");
+            const user = await Pi.authenticate(['payments', 'username'], function(p){});
+            
+            alert("Identité confirmée : " + user.user.username + ". Ouverture du Wallet...");
+
+            const payment = await Pi.createPayment({
+                amount: 1,
+                memo: "Soutien pour jeuxvideo.pi",
+                metadata: { type: "donation" },
+            }, {
+                onReadyForServerApproval: function(id) { alert("Paiement initié ! ID: " + id); },
+                onReadyForServerCompletion: function(id, tx) { alert("Félicitations ! Étape 10 validée !"); },
+                onCancel: function(id) { alert("Paiement annulé."); },
+                onError: function(e) { alert("Erreur SDK : " + e.message); }
+            });
         } catch (error) {
-          alert("Erreur : " + error.message);
+            alert("Désolé, une erreur est survenue : " + error.message);
         }
-      };
-    </script>
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
