@@ -7,79 +7,75 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    
+
     <style>
-        :root { --pi-gold: #ffaa00; --bg-dark: #080808; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: white; text-align: center; padding: 20px; }
-        .container { max-width: 500px; margin: auto; background: #111; padding: 25px; border-radius: 24px; border: 1px solid #222; }
-        h1 { font-size: 2.5em; margin-bottom: 20px; }
-        #pay_button { 
-            width: 100%; padding: 15px; background: var(--pi-gold); color: black; 
-            border: none; border-radius: 12px; font-weight: bold; cursor: pointer; 
-            font-size: 1.1em; margin-top: 20px;
-        }
-        #status-box { margin-top: 15px; font-size: 0.9em; color: #888; }
+        :root { --pi-gold: #ffaa00; --bg-dark: #080808; --card-bg: #111111; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: #ffffff; display: flex; justify-content: center; align-items: flex-start; margin: 0; padding: 10px; }
+        .container { margin-top: 5px; padding: 15px 25px 30px 25px; max-width: 500px; width: 100%; background: var(--card-bg); border-radius: 24px; text-align: center; border: 1px solid #222; }
+        h1 { font-size: 2.5em; margin: 0 0 15px 0; font-weight: 800; }
+        .contact-form { margin-top: 20px; padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 170, 0, 0.2); background: rgba(255, 255, 255, 0.02); }
+        .submit-btn { width: 100%; padding: 12px; background: transparent; color: var(--pi-gold); border: 2px solid var(--pi-gold); border-radius: 8px; font-weight: bold; cursor: pointer; }
+        #pay_button { width: 100%; padding: 12px; background: var(--pi-gold); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; animation: pulse-gold 2s infinite; }
+        #status-box { margin-top: 10px; font-size: 0.8em; color: var(--pi-gold); font-weight: bold; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: white; box-sizing: border-box; }
+        @keyframes pulse-gold { 0% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 170, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0); } }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>jeuxvideo<span style="color:var(--pi-gold)">.pi</span></h1>
         
-        <div style="background:#6c5ce7; padding:15px; border-radius:12px; font-weight:bold;">
+        <div style="background:#6c5ce7; padding:15px; border-radius:12px; font-weight:bold; margin-bottom:20px;">
             🎮 CLIQUE ICI POUR JOUER (BETA)
         </div>
 
-        <div id="status-box">Initialisation du SDK...</div>
+        <div id="status-box">Initialisation...</div>
 
-        <button id="pay_button">Donner 1 Pi pour le projet</button>
+        <div class="contact-form">
+            <p style="color:var(--pi-gold); font-weight:bold; margin-bottom:15px;">PROPOSER UN PROJET</p>
+            <input type="email" placeholder="Votre email...">
+            <textarea placeholder="Votre message..." rows="3"></textarea>
+            <button class="submit-btn">Envoyer la proposition</button>
+        </div>
+
+        <div style="margin-top: 25px; border-top: 1px solid #333; padding-top:20px;">
+            <p style="font-size: 0.8em; color: #aaa; margin-bottom:10px;">Soutenez le développement</p>
+            <button id="pay_button">Donner 1 Pi pour le projet</button>
+        </div>
     </div>
 
     <script>
-        // A. Initialisation
         const Pi = window.Pi;
         Pi.init({ version: "2.0", sandbox: true });
 
         const statusBox = document.getElementById('status-box');
 
-        // B. Authentification automatique au chargement
         async function authUser() {
             try {
-                const scopes = ['payments', 'username'];
-                const auth = await Pi.authenticate(scopes, onIncompletePaymentFound);
-                statusBox.innerHTML = "Connecté en tant que : " + auth.user.username;
-                statusBox.style.color = "#ffaa00";
+                const auth = await Pi.authenticate(['payments', 'username'], function(p){});
+                statusBox.innerHTML = "Connecté : " + auth.user.username;
             } catch (err) {
-                statusBox.innerHTML = "Erreur d'auth : Ouvrez dans le Pi Browser";
-                console.error(err);
+                statusBox.innerHTML = "Veuillez utiliser le Pi Browser";
             }
         }
 
-        // Gestion des paiements interrompus
-        function onIncompletePaymentFound(payment) {
-            console.log("Paiement incomplet trouvé", payment);
-        };
-
-        // C. La fonction de paiement
         document.getElementById('pay_button').addEventListener('click', async function() {
             try {
-                statusBox.innerHTML = "Création du paiement...";
                 const payment = await Pi.createPayment({
-                    amount: 1, // Le montant que tu as choisi
-                    memo: "Soutien pour jeuxvideo.pi",
+                    amount: 1, //
+                    memo: "Donation jeuxvideo.pi",
                     metadata: { type: "donation" },
                 }, {
-                    onReadyForServerApproval: function(paymentId) { console.log("Prêt pour approbation", paymentId); },
-                    onReadyForServerCompletion: function(paymentId, txid) { console.log("Paiement complété", txid); },
-                    onCancel: function(paymentId) { statusBox.innerHTML = "Paiement annulé"; },
-                    onError: function(error, payment) { console.error(error); }
+                    onReadyForServerApproval: function(id) { console.log("Approuvé"); },
+                    onReadyForServerCompletion: function(id, tx) { statusBox.innerHTML = "Merci !"; },
+                    onCancel: function(id) { statusBox.innerHTML = "Annulé"; },
+                    onError: function(e) { console.error(e); }
                 });
             } catch (error) {
-                alert("Erreur de paiement : " + error.message);
+                alert("Erreur SDK : " + error.message);
             }
         });
 
-        // Lancement de l'authentification
         authUser();
     </script>
 </body>
