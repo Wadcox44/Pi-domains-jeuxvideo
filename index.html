@@ -81,7 +81,10 @@
         .social-links { display: flex; gap: 10px; margin-top: 25px; justify-content: center; }
         .contact-btn { padding: 10px 15px; color: #fff; text-decoration: none; border-radius: 8px; font-size: 0.8em; flex: 1; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         .btn-tg { background: #0088cc22; color: #0088cc; }
+        .btn-reddit { background: #FF450022; color: #FF4500; }
         .btn-discord { background: #5865F222; color: #5865F2; }
+
+        .footer-info { margin-top: 20px; font-size: 0.7em; color: #444; }
     </style>
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 </head>
@@ -91,21 +94,22 @@
     <h1>jeuxvideo<span class="pi-text">.pi</span></h1>
     
     <div style="margin-bottom: 25px;">
-        <a href="2048/index.html" style="display: inline-block; padding: 12px 25px; background-color: #6c5ce7; color: white; text-decoration: none; border-radius: 12px; font-weight: bold; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);">
+        <a href="2048/index.html" style="display: inline-block; padding: 12px 25px; background-color: #6c5ce7; color: white; text-decoration: none; border-radius: 12px; font-weight: bold;">
             🎮 CLIQUE ICI POUR JOUER (BETA)
         </a>
     </div>
     
     <p><strong>Portail Gaming Pi Network</strong></p>
+    <p style="font-size: 0.9em;">Développeurs, studios ou partenaires ? <br>Envoyez-moi un message direct ci-dessous.</p>
 
     <form action="https://formspree.io/f/xwvoaroz" method="POST" class="contact-form">
         <div class="form-group">
             <label>Votre Email</label>
-            <input type="email" name="email" required>
+            <input type="email" name="email" placeholder="email@exemple.com" required>
         </div>
         <div class="form-group">
             <label>Message / Projet</label>
-            <textarea name="message" required></textarea>
+            <textarea name="message" placeholder="Parlez-moi de votre projet..." required></textarea>
         </div>
         <button type="submit" class="submit-btn">Envoyer la proposition</button>
     </form>
@@ -115,35 +119,49 @@
         <button id="pay_button">Donner 1 Pi pour le projet</button>
     </div>
 
+    <div class="divider"></div>
+
+    <p style="font-size: 0.85em; color: #777; font-style: italic; margin-top: 20px;">
+        Building the ultimate gaming hub. Open for partnerships.
+    </p>
+
     <div class="social-links">
         <a href="https://t.me/Wadcox" target="_blank" class="contact-btn btn-tg">Telegram</a>
+        <a href="https://www.reddit.com/user/WadCox" target="_blank" class="contact-btn btn-reddit">Reddit</a>
         <a href="https://discord.gg/6hzZuv3bxR" target="_blank" class="contact-btn btn-discord">Discord</a>
+    </div>
+
+    <div class="footer-info">
+        Verified Owner: @WadCox
     </div>
 </div>
 
 <script>
-    // Initialisation UNIQUE du SDK
     const Pi = window.Pi;
     Pi.init({ version: "2.0", sandbox: true });
 
-    // Gestion UNIQUE du bouton de paiement
     document.getElementById('pay_button').onclick = async function() {
         try {
             alert("Vérification de l'identité...");
             const user = await Pi.authenticate(['payments', 'username'], function(p){});
             
-            alert("Identité confirmée : " + user.user.username + ". Ouverture du Wallet...");
+            alert("Bonjour " + user.user.username + " ! Ouverture du Wallet...");
 
             const payment = await Pi.createPayment({
                 amount: 1,
-                memo: "Soutien pour jeuxvideo.pi",
+                memo: "Don pour jeuxvideo.pi",
                 metadata: { type: "donation" },
             }, {
                 onReadyForServerApproval: function(id) { alert("Paiement initié ! ID: " + id); },
-                onReadyForServerCompletion: function(id, tx) { alert("Félicitations ! Étape 10 validée !"); },
+                onReadyForServerCompletion: function(id, tx) { alert("Etape 10 validée !"); },
                 onCancel: function(id) { alert("Paiement annulé."); },
                 onError: function(e) { alert("Erreur SDK : " + e.message); }
             });
         } catch (error) {
-            alert("Désolé, une erreur est survenue : " + error.message);
+            alert("Erreur : " + error.message);
         }
+    };
+</script>
+
+</body>
+</html>
