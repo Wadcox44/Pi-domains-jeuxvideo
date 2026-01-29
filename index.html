@@ -149,7 +149,13 @@
       };
 
       // L'AUTHENTIFICATION (C'est ici que ça bloquait)
-      const user = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
+      alert("Envoi de la demande d'authentification...");
+      const user = await Promise.race([
+        Pi.authenticate(['username', 'payments'], onIncompletePaymentFound),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Le réseau Pi ne répond pas après 10 secondes (Vérifie tes URLs sur le portail)")), 10000)
+        )
+      ]);
       
       // SI CA MARCHE, ON ARRIVE ICI :
       alert("Etape 3 : Bonjour " + user.user.username);
@@ -176,6 +182,7 @@
 
 </body>
 </html>
+
 
 
 
