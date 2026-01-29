@@ -1,78 +1,57 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeuxvideo.pi | Future Gaming Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-    
+    <title>Jeux Video Portal</title>
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-
     <style>
-        :root { --pi-gold: #ffaa00; --bg-dark: #080808; --card-bg: #111111; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: #ffffff; display: flex; justify-content: center; align-items: flex-start; margin: 0; padding: 10px; }
-        .container { margin-top: 5px; padding: 15px 25px 30px 25px; max-width: 500px; width: 100%; background: var(--card-bg); border-radius: 24px; text-align: center; border: 1px solid #222; }
-        h1 { font-size: 2.5em; margin: 0 0 15px 0; font-weight: 800; }
-        .contact-form { margin-top: 20px; padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 170, 0, 0.2); background: rgba(255, 255, 255, 0.02); }
-        .submit-btn { width: 100%; padding: 12px; background: transparent; color: var(--pi-gold); border: 2px solid var(--pi-gold); border-radius: 8px; font-weight: bold; cursor: pointer; }
-        #pay_button { width: 100%; padding: 12px; background: var(--pi-gold); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; animation: pulse-gold 2s infinite; }
-        #status-box { margin-top: 10px; font-size: 0.8em; color: var(--pi-gold); font-weight: bold; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: white; box-sizing: border-box; }
-        @keyframes pulse-gold { 0% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 170, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0); } }
+        body { background: #1a1a1a; color: white; text-align: center; font-family: sans-serif; }
+        iframe { width: 100%; height: 500px; border: none; margin-top: 20px; }
+        #pay-section { background: #333; padding: 20px; border-radius: 10px; margin: 20px; }
+        button { background: #ffaa00; color: black; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; border-radius: 5px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>jeuxvideo<span style="color:var(--pi-gold)">.pi</span></h1>
-        
-        <div style="background:#6c5ce7; padding:15px; border-radius:12px; font-weight:bold; margin-bottom:20px;">
-            🎮 CLIQUE ICI POUR JOUER (BETA)
-        </div>
 
-        <div id="status-box">Initialisation...</div>
-
-        <div class="contact-form">
-            <p style="color:var(--pi-gold); font-weight:bold; margin-bottom:15px;">PROPOSER UN PROJET</p>
-            <input type="email" placeholder="Votre email...">
-            <textarea placeholder="Votre message..." rows="3"></textarea>
-            <button class="submit-btn">Envoyer la proposition</button>
-        </div>
-
-        <div style="margin-top: 25px; border-top: 1px solid #333; padding-top:20px;">
-            <p style="font-size: 0.8em; color: #aaa; margin-bottom:10px;">Soutenez le développement</p>
-            <button id="pay_button">Donner 1 Pi pour le projet</button>
-        </div>
+    <h1>Bienvenue sur Jeux Video Portal</h1>
+    
+    <div id="pay-section">
+        <p id="status-box">Initialisation du système...</p>
+        <button id="pay_button">Donner 1 Pi pour le projet</button>
     </div>
 
+    <iframe src="https://play2048.co/"></iframe>
+
     <script>
-    const Pi = window.Pi;
-    Pi.init({ version: "2.0", sandbox: true });
+        const Pi = window.Pi;
+        Pi.init({ version: "2.0", sandbox: true });
 
-    async function lancerPaiement() {
-        try {
-            // On demande l'auth, mais comme c'est déjà fait, ça devrait passer direct
-            await Pi.authenticate(['payments', 'username'], function(p){});
-            
-            // On lance le paiement immédiatement
-            const payment = await Pi.createPayment({
-                amount: 1, 
-                memo: "Test Etape 10",
-                metadata: { type: "test" },
-            }, {
-                onReadyForServerApproval: function(id) { console.log("Approuvé"); },
-                onReadyForServerCompletion: function(id, tx) { alert("Paiement réussi !"); },
-                onCancel: function(id) { },
-                onError: function(e) { alert("Erreur : " + e.message); }
-            });
-        } catch (error) {
-            console.error(error);
+        async function initApp() {
+            try {
+                const auth = await Pi.authenticate(['payments', 'username'], function(p){});
+                document.getElementById('status-box').innerHTML = "Connecté : " + auth.user.username;
+            } catch (err) {
+                document.getElementById('status-box').innerHTML = "Prêt (mode test)";
+            }
         }
-    }
 
-    // On lie cette fonction directement au bouton
-    document.getElementById('pay_button').onclick = lancerPaiement;
-</script>
+        document.getElementById('pay_button').onclick = async function() {
+            try {
+                const payment = await Pi.createPayment({
+                    amount: 1,
+                    memo: "Soutien au portail",
+                    metadata: { type: "donation" },
+                }, {
+                    onReadyForServerApproval: (id) => alert("Paiement envoyé ! ID: " + id),
+                    onReadyForServerCompletion: (id, tx) => alert("Merci !"),
+                    onCancel: (id) => alert("Annulé"),
+                    onError: (e) => alert("Erreur SDK: " + e.message)
+                });
+            } catch (e) {
+                alert("Erreur critique : " + e.message);
+            }
+        };
+
+        initApp();
+    </script>
 </body>
 </html>
-
-
