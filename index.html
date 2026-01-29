@@ -148,9 +148,12 @@
       };
 
       // Authentification
-      const user = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
-      alert("Etape 3 : Bonjour " + user.user.username);
-
+      const user = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound)
+        .catch(e => { alert("Erreur Auth : " + e); });
+      
+      if(user) {
+          alert("Etape 3 : Bonjour " + user.user.username);
+      }
       // Création du paiement
       const payment = await Pi.createPayment({
         amount: 1,
@@ -174,3 +177,4 @@
 
 </body>
 </html>
+
