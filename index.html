@@ -135,47 +135,42 @@
 </div>
 
 <script>
-  // 1. Initialisation (Toujours en haut)
+  // 1. Initialisation TEST
   Pi.init({ version: "2.0", sandbox: true });
 
-  // 2. Ta fonction qui se déclenche au clic du bouton
   async function donnerPi() {
     try {
+      console.log("Bouton cliqué");
       alert("Début de l'Etape 2...");
       
       const onIncompletePaymentFound = (payment) => { 
-        console.log("Paiement à finaliser", payment); 
+        console.log("Paiement incomplet", payment); 
       };
 
+      // Authentification
       const user = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
       alert("Etape 3 : Bonjour " + user.user.username);
 
+      // Création du paiement
       const payment = await Pi.createPayment({
         amount: 1,
-        memo: "Don pour mon projet",
-        metadata: { productId: "don_" + Date.now() },
+        memo: "Test de don pour le Hub",
+        metadata: { productId: "test_" + Date.now() },
       }, {
-        onReadyForServerApproval: (paymentId) => { 
-            alert("Etape 4 : Paiement approuvé ! ID: " + paymentId); 
-        },
-        onReadyForServerCompletion: (paymentId, txid) => { 
-            alert("Etape 5 : Succès final !"); 
-        },
-        onCancel: (paymentId) => { alert("Paiement annulé."); },
-        onError: (error, payment) => { alert("Erreur : " + error.message); },
+        onReadyForServerApproval: (paymentId) => { alert("Approuvé ! ID: " + paymentId); },
+        onReadyForServerCompletion: (paymentId, txid) => { alert("Succès !"); },
+        onCancel: (paymentId) => { alert("Annulé."); },
+        onError: (error, payment) => { alert("Erreur Pi : " + error.message); },
       });
 
     } catch (err) {
       alert("ERREUR : " + err.message);
+    }
   }
-      
-    document.getElementById('pay_button').addEventListener('click', donnerPi);
+
+  // Cette ligne doit être seule à la fin pour activer le bouton
+  document.getElementById('pay_button').onclick = donnerPi;
 </script>
 
 </body>
 </html>
-
-
-
-
-
