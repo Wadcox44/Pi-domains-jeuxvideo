@@ -135,44 +135,46 @@
 </div>
 
 <script>
-    // Initialisation
-    const Pi = window.Pi;
-    Pi.init({ version: "2.0", sandbox: false });
+  // 1. Initialisation (Toujours en haut)
+  Pi.init({ version: "2.0", sandbox: false });
 
-    document.getElementById('pay_button').onclick = async function() {
-        alert("Etape 1 : Bouton cliqué");
-        try {
-            // Utilisation d'une fonction de rappel (callback) plus robuste
-            const scopes = ['payments', 'username'];
-            
-            function onIncompletePaymentFound(payment) {
-                alert("Paiement incomplet trouvé : " + payment.identifier);
-            };
+  // 2. Ta fonction qui se déclenche au clic du bouton
+  async function donnerPi() {
+    try {
+      alert("Début de l'Etape 2...");
+      
+      // La fonction de sécurité obligatoire
+      const onIncompletePaymentFound = (payment) => { 
+        console.log("Paiement à finaliser", payment); 
+      };
 
-            alert("Etape 2 : Demande d'authentification...");
-            
-            const user = await Pi.authenticate(scopes, onIncompletePaymentFound);
-            
-            alert("Etape 3 : Bonjour " + user.user.username);
+      // L'AUTHENTIFICATION (C'est ici que ça bloquait)
+      const user = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
+      
+      // SI CA MARCHE, ON ARRIVE ICI :
+      alert("Etape 3 : Bonjour " + user.user.username);
 
-            const payment = await Pi.createPayment({
-                amount: 1,
-                memo: "Don pour jeuxvideo.pi",
-                metadata: { type: "donation" },
-            }, {
-                onReadyForServerApproval: function(id) { alert("Etape 4 : Paiement approuvé ! ID: " + id); },
-                onReadyForServerCompletion: function(id, tx) { alert("Etape 5 : Succès final !"); },
-                onCancel: function(id) { alert("Paiement annulé."); },
-                onError: function(e) { alert("Erreur Paiement : " + e.message); }
-            });
-        } catch (error) {
-            alert("DÉTAIL ERREUR : " + error.message);
-            console.error(error);
-        }
-    };
+      // 3. LANCEMENT DU PAIEMENT
+      const payment = await Pi.createPayment({
+        amount: 1,
+        memo: "Don pour mon projet",
+        metadata: { productId: "1234" },
+      }, {
+        onReadyForServerApproval: (paymentId) => { console.log("Approuvé"); },
+        onReadyForServerCompletion: (paymentId, txid) => { alert("Paiement fini !"); },
+        onCancel: (paymentId) => { alert("Paiement annulé"); },
+        onError: (error, payment) => { alert("Erreur paiement"); },
+      });
+
+    } catch (err) {
+      // Si l'étape 2 échoue, ce message te dira ENFIN pourquoi
+      alert("ERREUR : " + err.message);
+    }
+  }
 </script>
 
 </body>
 </html>
+
 
 
