@@ -149,33 +149,19 @@
       };
 
       // L'AUTHENTIFICATION (C'est ici que ça bloquait)
-      const user = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
-      
-      // SI CA MARCHE, ON ARRIVE ICI :
+   Pi.authenticate(['username', 'payments'], onIncompletePaymentFound)
+  .then(function(user) {
       alert("Etape 3 : Bonjour " + user.user.username);
-
-      // 3. LANCEMENT DU PAIEMENT
-      const payment = await Pi.createPayment({
-        amount: 1,
-        memo: "Don pour mon projet",
-        metadata: { productId: "1234" },
-      }, {
-        onReadyForServerApproval: (paymentId) => { console.log("Approuvé"); },
-        onReadyForServerCompletion: (paymentId, txid) => { alert("Paiement fini !"); },
-        onCancel: (paymentId) => { alert("Paiement annulé"); },
-        onError: (error, payment) => { alert("Erreur paiement"); },
-      });
-
-    } catch (err) {
-      // Si l'étape 2 échoue, ce message te dira ENFIN pourquoi
-      alert("ERREUR : " + err.message);
-    }
-  }
+  })
+  .catch(function(error) {
+      alert("Erreur détectée : " + error.message);
+  });
     document.getElementById('pay_button').addEventListener('click', donnerPi);
 </script>
 
 </body>
 </html>
+
 
 
 
