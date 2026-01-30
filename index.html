@@ -135,54 +135,61 @@
 </div>
 
 <script>
-  // 1. Initialisation (Toujours en haut)
+  // 1. Initialisation
   Pi.init({ version: "2.0", sandbox: true });
 
-  // 2. Ta fonction qui se déclenche au clic du bouton
+  // 2. Fonction de paiement
   async function donnerPi() {
+    console.log("Bouton cliqué");
+    
     try {
-      alert("Début de l'Etape 2...");
+      // Étape A: Authentification
+      const user = await Pi.authenticate(['username', 'payments'], (p) => {
+        console.log("Paiement incomplet trouvé", p);
+      });
       
-      // La fonction de sécurité obligatoire
-      const onIncompletePaymentFound = (payment) => { 
-        console.log("Paiement à finaliser", payment); 
-      };
+      alert("Identifié : " + user.user.username);
 
-      // L'AUTHENTIFICATION (C'est ici que ça bloquait)
-      alert("Envoi de la demande d'authentification...");
-      const user = await Promise.race([
-        Pi.authenticate(['username', 'payments'], onIncompletePaymentFound),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error("Le réseau Pi ne répond pas après 10 secondes (Vérifie tes URLs sur le portail)")), 10000)
-        )
-      ]);
-      
-      // SI CA MARCHE, ON ARRIVE ICI :
-      alert("Etape 3 : Bonjour " + user.user.username);
+      // Étape B: Création du paiement avec ID Aléatoire
+      // On utilise Math.random pour que l'ID soit TOUJOURS nouveau
+      const randomId = "id_" + Math.floor(Math.random() * 1000000);
 
-      // 3. LANCEMENT DU PAIEMENT
-      const payment = await Pi.createPayment({
-        amount: 1,
-        memo: "Don pour mon projet",
-        metadata: { productId: "1234" },
+      await Pi.createPayment({
+        amount: 0.1,
+        memo: "Soutien Hub Gaming",
+        metadata: { productId: randomId },
       }, {
-        onReadyForServerApproval: (paymentId) => { console.log("Approuvé"); },
-        onReadyForServerCompletion: (paymentId, txid) => { alert("Paiement fini !"); },
-        onCancel: (paymentId) => { alert("Paiement annulé"); },
-        onError: (error, payment) => { alert("Erreur paiement"); },
+        onReadyForServerApproval: function(paymentId) {
+          alert("Fenêtre de paiement ouverte ! ID: " + paymentId);
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          alert("Paiement terminé avec succès !");
+        },
+        onCancel: function(paymentId) {
+          alert("Paiement annulé par l'utilisateur.");
+        },
+        onError: function(error, payment) {
+          alert("Le réseau Pi dit : " + error.message);
+        },
       });
 
     } catch (err) {
-      // Si l'étape 2 échoue, ce message te dira ENFIN pourquoi
-      alert("ERREUR : " + err.message);
+      alert("Erreur critique : " + err.message);
     }
   }
-        
-    document.getElementById('pay_button').addEventListener('click', donnerPi);
-</script>
 
+  // 3. Liaison du bouton (méthode sécurisée)
+  const bouton = document.getElementById('pay_button');
+  if (bouton) {
+    bouton.onclick = donnerPi;
+  } else {
+    console.error("Le bouton 'pay_button' est introuvable dans le HTML.");
+  }
+</script>
+    
 </body>
 </html>
+
 
 
 
