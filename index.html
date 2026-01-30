@@ -160,8 +160,18 @@
         metadata: { productId: randomId },
       }, {
         onReadyForServerApproval: function(paymentId) {
-          console.log("Paiement en attente : " + paymentId);
-        },
+  // On envoie l'ID à ton nouveau serveur Vercel
+  fetch('https://wadcox44-github-io.vercel.app/api/approve', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paymentId: paymentId })
+  })
+  .then(response => {
+    if (response.ok) {
+       console.log("Le serveur Vercel a validé le paiement !");
+    }
+  });
+},
         onReadyForServerCompletion: function(paymentId, txid) {
           alert("Merci pour votre don !");
         },
@@ -188,6 +198,7 @@
     
 </body>
 </html>
+
 
 
 
