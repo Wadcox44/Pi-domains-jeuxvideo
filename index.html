@@ -136,66 +136,57 @@
     </div>
 </div>
 <script>
-  // 1. Initialisation en mode Production
-  Pi.init({ version: "2.0", sandbox: false });
-
-  async function donnerPi() {
+async function donnerPi() {
     try {
         // 1. Connexion au compte Pi
         const user = await Pi.authenticate(['username', 'payments'], 
-            function(p) { console.log("Paiement incomplet :", p); },
-            function(e) { console.error("Erreur Auth :", e); }
+            function(p) { console.log("Paiement incomplet :", p); }
         );
         
-        console.log("Utilisateur : " + user.user.username);
+        console.log("Utilisateur connecté : " + user.user.username);
 
-        // 2. Lancement du paiement
+        // 2. Lancement du paiement (CORRIGÉ avec le bloc callbacks)
         const payment = await Pi.createPayment({
             amount: 1,
             memo: "Soutien au projet",
             metadata: { productId: "don-001" },
-    const payment = Pi.createPayment({
-        amount: 1,
-        memo: "Soutien au projet",
-        metadata: { productId: "don-001" },
-        
-        onReadyForServerApproval: function(paymentId) {
-  // On envoie l'ID à ton nouveau serveur Vercel
-  return fetch('https://wadcox44-github-io.vercel.app/api/approve', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ paymentId: paymentId })
-    })
-    .then(res => res.json())
-    .then(data => console.log("Réponse du serveur :", data))
-    .catch(err => console.error("Erreur de connexion serveur :", err));
-},
-        onReadyForServerCompletion: function(paymentId, txid) {
-          alert("Merci pour votre don !");
-        },
-        onCancel: function(paymentId) {
-          console.log("Paiement annulé.");
-        },
-        onError: function(error, payment) {
-          alert("Erreur réseau Pi : " + error.message);
-        },
-      });
+            callbacks: { // <--- C'est ce mot-clé qui manquait !
+                onReadyForServerApproval: function(paymentId) {
+                    return fetch('https://wadcox44-github-io.vercel.app/api/approve', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ paymentId: paymentId })
+                    })
+                    .then(res => res.json())
+                    .catch(err => console.error("Erreur serveur :", err));
+                },
+                onReadyForServerCompletion: function(paymentId, txid) {
+                    alert("Merci pour votre don ! Transaction : " + txid);
+                },
+                onCancel: function(paymentId) {
+                    console.log("Paiement annulé.");
+                },
+                onError: function(error, payment) {
+                    alert("Erreur réseau Pi : " + error.message);
+                }
+            }
+        });
 
     } catch (err) {
-      // Si l'auth échoue encore, ce message nous dira pourquoi
-      alert("Info : " + err.message);
+        alert("Info : " + err.message);
     }
-  }
+}
 
-  // Liaison du bouton
-  const bouton = document.getElementById('pay_button');
-  if (bouton) {
+// Liaison propre du bouton
+const bouton = document.getElementById('pay_button');
+if (bouton) {
     bouton.onclick = donnerPi;
-  }
+}
 </script>
     
 </body>
 </html>
+
 
 
 
