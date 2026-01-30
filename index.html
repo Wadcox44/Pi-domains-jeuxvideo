@@ -134,42 +134,40 @@
     </div>
 </div>
 <script>
-  window.onload = function() {
-    const btn = document.getElementById('pay_button');
+  // On ne met rien dans window.onload, on initialise direct
+  Pi.init({ version: "2.0", sandbox: true });
+
+  async function donnerPi() {
+    console.log("Tentative d'authentification...");
     
-    // Initialisation immédiate au chargement
+    // Test simple : si ça bloque ici, c'est le SDK
     try {
-      Pi.init({ version: "2.0", sandbox: true });
-    } catch(e) { console.error(e); }
-
-    btn.onclick = function() {
-      alert("Demande d'authentification lancée...");
-
-      Pi.authenticate(['username', 'payments'], 
-        function(payment) { console.log("Incomplet", payment); }, // OnIncomplete
-        function(user) { alert("Bonjour " + user.user.username); launchPayment(); }, // OnSuccess
-        function(err) { alert("Erreur : " + err.message); } // OnError
-      );
-    };
-  };
-
-  function launchPayment() {
-    const rId = "order_" + Math.floor(Math.random() * 1000000);
-    Pi.createPayment({
-      amount: 0.1,
-      memo: "Don Test",
-      metadata: { productId: rId },
-    }, {
-      onReadyForServerApproval: function(id) { alert("Paiement ID: " + id); },
-      onReadyForServerCompletion: function(id, tx) { alert("Succès !"); },
-      onCancel: function(id) { alert("Annulé"); },
-      onError: function(err) { alert("Erreur Paiement : " + err.message); }
-    });
+      const user = await Pi.authenticate(['username', 'payments'], (p) => {});
+      alert("SUCCÈS : Bonjour " + user.user.username);
+      
+      // Si l'auth passe, on lance le paiement direct
+      const p = await Pi.createPayment({
+        amount: 0.1,
+        memo: "Test Final",
+        metadata: { productId: "test_" + Date.now() }
+      }, {
+        onReadyForServerApproval: (id) => alert("Paiement ID: " + id),
+        onReadyForServerCompletion: (id, tx) => alert("Payé !"),
+        onCancel: (id) => alert("Annulé"),
+        onError: (err) => alert("Erreur: " + err.message)
+      });
+    } catch (e) {
+      alert("L'authentification a échoué : " + e.message);
+    }
   }
+
+  // On lie le bouton
+  document.getElementById('pay_button').onclick = donnerPi;
 </script>
     
 </body>
 </html>
+
 
 
 
