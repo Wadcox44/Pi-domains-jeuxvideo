@@ -136,24 +136,24 @@
     </div>
 </div>
 <script>
-  // Initialisation
+  console.log("Version du script : 2.1 - Correction Callbacks");
+  
   Pi.init({ version: "2.0", sandbox: false });
 
   async function donnerPi() {
+    console.log("Bouton cliqué, démarrage du processus...");
     try {
-      // Authentification
       const user = await Pi.authenticate(['username', 'payments'], 
-        function(p) { console.log("Paiement incomplet :", p); },
-        function(e) { console.error(e); }
+        function(p) { console.log("Incomplet:", p); }
       );
 
-      // Création du paiement avec TOUS les callbacks requis
       await Pi.createPayment({
         amount: 1,
-        memo: "Soutien au projet jeuxvideo.pi",
+        memo: "Don de soutien",
         metadata: { productId: "don-001" },
         callbacks: {
           onReadyForServerApproval: function(paymentId) {
+            console.log("Approbation serveur pour ID:", paymentId);
             return fetch('https://wadcox44-github-io.vercel.app/api/approve', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -161,31 +161,24 @@
             }).then(res => res.json());
           },
           onReadyForServerCompletion: function(paymentId, txid) {
-            alert("Merci ! Don validé. ID: " + txid);
+            alert("Succès ! TXID: " + txid);
           },
-          onCancel: function(paymentId) { 
-            console.log("Paiement annulé par l'utilisateur."); 
-          },
-          onError: function(error, payment) { 
-            console.error("Erreur Pi SDK:", error);
-            alert("Erreur technique : " + error.message);
-          }
+          onCancel: function(paymentId) { console.log("Annulé"); },
+          onError: function(error, payment) { alert("Erreur SDK: " + error.message); }
         }
       });
     } catch (err) {
-      alert("Erreur : " + err.message);
+      alert("Erreur système : " + err.message);
     }
   }
 
-  // Liaison au bouton
-  window.onload = function() {
-    const btn = document.getElementById('pay_button');
-    if (btn) btn.onclick = donnerPi;
-  };
+  // Liaison directe
+  document.getElementById('pay_button').onclick = donnerPi;
 </script>
     
 </body>
 </html>
+
 
 
 
