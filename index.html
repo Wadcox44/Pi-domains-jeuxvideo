@@ -154,11 +154,12 @@
       // Étape B: Création du paiement
       const randomId = "prod_" + Math.floor(Math.random() * 1000000);
 
-      await Pi.createPayment({
+      function transferPi() {
+    const payment = Pi.createPayment({
         amount: 1,
-        memo: "Soutien Hub Gaming",
-        metadata: { productId: randomId },
-      }, {
+        memo: "Soutien au projet",
+        metadata: { productId: "don-001" },
+        
         onReadyForServerApproval: function(paymentId) {
   // On envoie l'ID à ton nouveau serveur Vercel
   return fetch('https://wadcox44-github-io.vercel.app/api/approve', {
@@ -196,6 +197,7 @@
     
 </body>
 </html>
+
 
 
 
