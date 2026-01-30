@@ -135,43 +135,50 @@
 </div>
 
 <script>
-  // 1. Initialisation
+  // 1. Initialisation (Toujours en haut)
   Pi.init({ version: "2.0", sandbox: true });
 
+  // 2. Ta fonction qui se déclenche au clic du bouton
   async function donnerPi() {
     try {
-      alert("Début de l'authentification...");
+      alert("Début de l'Etape 2...");
       
+      // La fonction de sécurité obligatoire
       const onIncompletePaymentFound = (payment) => { 
         console.log("Paiement à finaliser", payment); 
       };
 
-      // L'AUTHENTIFICATION
-      const user = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
-      alert("Bonjour " + user.user.username);
-
-      // 3. LANCEMENT DU PAIEMENT UNIQUE
-      const uniqueId = "test_" + Math.floor(Math.random() * 999999); 
+      // L'AUTHENTIFICATION (C'est ici que ça bloquait)
+      alert("Envoi de la demande d'authentification...");
+      const user = await Promise.race([
+        Pi.authenticate(['username', 'payments'], onIncompletePaymentFound),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Le réseau Pi ne répond pas après 10 secondes (Vérifie tes URLs sur le portail)")), 10000)
+        )
+      ]);
       
-      await Pi.createPayment({
-        amount: 0.1, 
-        memo: "Don Test Hub Gaming",
-        metadata: { productId: uniqueId },
+      // SI CA MARCHE, ON ARRIVE ICI :
+      alert("Etape 3 : Bonjour " + user.user.username);
+
+      // 3. LANCEMENT DU PAIEMENT
+      const payment = await Pi.createPayment({
+        amount: 1,
+        memo: "Don pour mon projet",
+        metadata: { productId: "1234" },
       }, {
-        onReadyForServerApproval: (paymentId) => { 
-          alert("Fenêtre de paiement ouverte !\nID: " + paymentId); 
-        },
-        onReadyForServerCompletion: (paymentId, txid) => { alert("Succès !"); },
-        onCancel: (paymentId) => { alert("Annulé"); },
-        onError: (error, payment) => { alert("Info : " + error.message); },
+        onReadyForServerApproval: (paymentId) => { console.log("Approuvé"); },
+        onReadyForServerCompletion: (paymentId, txid) => { alert("Paiement fini !"); },
+        onCancel: (paymentId) => { alert("Paiement annulé"); },
+        onError: (error, payment) => { alert("Erreur paiement"); },
       });
 
     } catch (err) {
+      // Si l'étape 2 échoue, ce message te dira ENFIN pourquoi
       alert("ERREUR : " + err.message);
     }
   }
-
-  document.getElementById('pay_button').addEventListener('click', donnerPi);
+        
+    document.getElementById('pay_button').addEventListener('click', donnerPi);
 </script>
 
 </body>
