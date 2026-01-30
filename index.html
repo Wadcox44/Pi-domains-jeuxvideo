@@ -161,16 +161,14 @@
       }, {
         onReadyForServerApproval: function(paymentId) {
   // On envoie l'ID à ton nouveau serveur Vercel
-  fetch('https://wadcox44-github-io.vercel.app/api/approve', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ paymentId: paymentId })
-  })
-  .then(response => {
-    if (response.ok) {
-       console.log("Le serveur Vercel a validé le paiement !");
-    }
-  });
+  return fetch('https://wadcox44-github-io.vercel.app/api/approve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paymentId: paymentId })
+    })
+    .then(res => res.json())
+    .then(data => console.log("Réponse du serveur :", data))
+    .catch(err => console.error("Erreur de connexion serveur :", err));
 },
         onReadyForServerCompletion: function(paymentId, txid) {
           alert("Merci pour votre don !");
