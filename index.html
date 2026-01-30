@@ -136,56 +136,57 @@
     </div>
 </div>
 <script>
-  // 1. Initialisation immédiate
+  // Initialisation
   Pi.init({ version: "2.0", sandbox: false });
 
   async function donnerPi() {
     try {
-      // 2. Authentification
+      // Authentification
       const user = await Pi.authenticate(['username', 'payments'], 
-        function(p) { console.log("Paiement incomplet :", p); }
+        function(p) { console.log("Paiement incomplet :", p); },
+        function(e) { console.error(e); }
       );
-      
-      console.log("Connecté : " + user.user.username);
 
-      // 3. Création du paiement avec le bloc CALLBACKS obligatoire
+      // Création du paiement avec TOUS les callbacks requis
       await Pi.createPayment({
         amount: 1,
-        memo: "Soutien au projet",
+        memo: "Soutien au projet jeuxvideo.pi",
         metadata: { productId: "don-001" },
         callbacks: {
           onReadyForServerApproval: function(paymentId) {
-            // Envoi vers ton serveur Vercel pour valider l'étape 10
             return fetch('https://wadcox44-github-io.vercel.app/api/approve', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ paymentId: paymentId })
-            })
-            .then(res => res.json());
+            }).then(res => res.json());
           },
           onReadyForServerCompletion: function(paymentId, txid) {
-            alert("Merci ! Transaction réussie : " + txid);
+            alert("Merci ! Don validé. ID: " + txid);
           },
-          onCancel: function(paymentId) { console.log("Annulé"); },
-          onError: function(error, payment) { alert("Erreur Pi : " + error.message); }
+          onCancel: function(paymentId) { 
+            console.log("Paiement annulé par l'utilisateur."); 
+          },
+          onError: function(error, payment) { 
+            console.error("Erreur Pi SDK:", error);
+            alert("Erreur technique : " + error.message);
+          }
         }
       });
     } catch (err) {
-      alert("Erreur d'initialisation : " + err.message);
+      alert("Erreur : " + err.message);
     }
   }
 
-  // 4. Liaison du bouton après chargement
+  // Liaison au bouton
   window.onload = function() {
-    const bouton = document.getElementById('pay_button');
-    if (bouton) {
-      bouton.onclick = donnerPi;
-    }
+    const btn = document.getElementById('pay_button');
+    if (btn) btn.onclick = donnerPi;
   };
 </script>
     
 </body>
 </html>
+
 
 
 
