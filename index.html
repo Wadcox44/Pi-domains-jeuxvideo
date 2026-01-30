@@ -116,7 +116,7 @@
 
     <div style="margin-top: 20px; border: 1px dashed #ffaa00; padding: 15px; border-radius: 15px; background: rgba(255,170,0,0.05);">
         <p style="font-size: 0.8em; color: #ffaa00; margin-bottom: 10px;">Soutenez le développement du Hub</p>
-        <button id="pay_button" onclick="donnerPi()" style="background-color: #ffa500; color: black; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;">
+        <button id="pay_button" onclick="TransferPi()" style="background-color: #ffa500; color: black; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;">
     Donner 1 pi pour soutenir le projet
 </button>
     </div>
@@ -139,7 +139,7 @@
   // 1. Initialisation en mode Production
   Pi.init({ version: "2.0", sandbox: false });
 
-  async function donnerPi() {
+  async function trasnferPi() {
     try {
       // Étape A: Authentification avec TOUS les callbacks requis
       const user = await Pi.authenticate(['username', 'payments'], 
@@ -199,6 +199,7 @@
     
 </body>
 </html>
+
 
 
 
