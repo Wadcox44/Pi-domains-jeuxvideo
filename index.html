@@ -135,60 +135,43 @@
 </div>
 
 <script>
-  // 1. Initialisation
-  Pi.init({ version: "2.0", sandbox: true });
+  console.log("Script chargé");
 
-  // 2. Fonction de paiement
-  async function donnerPi() {
-    console.log("Bouton cliqué");
+  // On attend que la page soit prête
+  window.onload = function() {
+    const btn = document.getElementById('pay_button');
     
-    try {
-      // Étape A: Authentification
-      const user = await Pi.authenticate(['username', 'payments'], (p) => {
-        console.log("Paiement incomplet trouvé", p);
-      });
-      
-      alert("Identifié : " + user.user.username);
-
-      // Étape B: Création du paiement avec ID Aléatoire
-      // On utilise Math.random pour que l'ID soit TOUJOURS nouveau
-      const randomId = "id_" + Math.floor(Math.random() * 1000000);
-
-      await Pi.createPayment({
-        amount: 0.1,
-        memo: "Soutien Hub Gaming",
-        metadata: { productId: randomId },
-      }, {
-        onReadyForServerApproval: function(paymentId) {
-          alert("Fenêtre de paiement ouverte ! ID: " + paymentId);
-        },
-        onReadyForServerCompletion: function(paymentId, txid) {
-          alert("Paiement terminé avec succès !");
-        },
-        onCancel: function(paymentId) {
-          alert("Paiement annulé par l'utilisateur.");
-        },
-        onError: function(error, payment) {
-          alert("Le réseau Pi dit : " + error.message);
-        },
-      });
-
-    } catch (err) {
-      alert("Erreur critique : " + err.message);
+    if (btn) {
+      btn.onclick = function() {
+        alert("CLIC DÉTECTÉ ! Le script fonctionne.");
+        
+        // On tente l'initialisation
+        try {
+          Pi.init({ version: "2.0", sandbox: true });
+          alert("Pi Network initialisé !");
+          
+          // On lance l'auth
+          Pi.authenticate(['username', 'payments'], function(p){})
+            .then(function(user) {
+              alert("Bonjour " + user.user.username);
+            })
+            .catch(function(err) {
+              alert("Erreur Auth : " + err.message);
+            });
+            
+        } catch(e) {
+          alert("Erreur Pi : " + e.message);
+        }
+      };
+    } else {
+      alert("ERREUR : Bouton non trouvé dans la page");
     }
-  }
-
-  // 3. Liaison du bouton (méthode sécurisée)
-  const bouton = document.getElementById('pay_button');
-  if (bouton) {
-    bouton.onclick = donnerPi;
-  } else {
-    console.error("Le bouton 'pay_button' est introuvable dans le HTML.");
-  }
+  };
 </script>
     
 </body>
 </html>
+
 
 
 
