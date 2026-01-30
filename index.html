@@ -134,42 +134,43 @@
     </div>
 </div>
 <script>
-  console.log("Script chargé");
-
-  // On attend que la page soit prête
   window.onload = function() {
     const btn = document.getElementById('pay_button');
     
-    if (btn) {
-      btn.onclick = function() {
-        alert("CLIC DÉTECTÉ ! Le script fonctionne.");
-        
-        // On tente l'initialisation
-        try {
-          Pi.init({ version: "2.0", sandbox: true });
-          alert("Pi Network initialisé !");
-          
-          // On lance l'auth
-          Pi.authenticate(['username', 'payments'], function(p){})
-            .then(function(user) {
-              alert("Bonjour " + user.user.username);
-            })
-            .catch(function(err) {
-              alert("Erreur Auth : " + err.message);
-            });
-            
-        } catch(e) {
-          alert("Erreur Pi : " + e.message);
-        }
-      };
-    } else {
-      alert("ERREUR : Bouton non trouvé dans la page");
-    }
+    // Initialisation immédiate au chargement
+    try {
+      Pi.init({ version: "2.0", sandbox: true });
+    } catch(e) { console.error(e); }
+
+    btn.onclick = function() {
+      alert("Demande d'authentification lancée...");
+
+      Pi.authenticate(['username', 'payments'], 
+        function(payment) { console.log("Incomplet", payment); }, // OnIncomplete
+        function(user) { alert("Bonjour " + user.user.username); launchPayment(); }, // OnSuccess
+        function(err) { alert("Erreur : " + err.message); } // OnError
+      );
+    };
   };
+
+  function launchPayment() {
+    const rId = "order_" + Math.floor(Math.random() * 1000000);
+    Pi.createPayment({
+      amount: 0.1,
+      memo: "Don Test",
+      metadata: { productId: rId },
+    }, {
+      onReadyForServerApproval: function(id) { alert("Paiement ID: " + id); },
+      onReadyForServerCompletion: function(id, tx) { alert("Succès !"); },
+      onCancel: function(id) { alert("Annulé"); },
+      onError: function(err) { alert("Erreur Paiement : " + err.message); }
+    });
+  }
 </script>
     
 </body>
 </html>
+
 
 
 
