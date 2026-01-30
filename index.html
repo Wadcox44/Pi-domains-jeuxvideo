@@ -152,7 +152,6 @@ alert("Statut du SDK : Initialisé et prêt");
         memo: "Test Final",
         metadata: { productId: "test_" + Date.now() }
       }, {
-        onReadyForServerApproval: (id) => alert("Paiement ID: " + id),
         onReadyForServerCompletion: (id, tx) => alert("Payé !"),
         onCancel: (id) => alert("Annulé"),
         onError: (err) => alert("Erreur: " + err.message)
@@ -168,6 +167,7 @@ alert("Statut du SDK : Initialisé et prêt");
     
 </body>
 </html>
+
 
 
 
