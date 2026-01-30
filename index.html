@@ -136,48 +136,50 @@
     </div>
 </div>
 <script>
-  console.log("Version du script : 2.1 - Correction Callbacks");
-  
   Pi.init({ version: "2.0", sandbox: false });
 
   async function donnerPi() {
-    console.log("Bouton cliqué, démarrage du processus...");
     try {
-      const user = await Pi.authenticate(['username', 'payments'], 
-        function(p) { console.log("Incomplet:", p); }
-      );
+      // 1. Authentification simplifiée
+      const user = await Pi.authenticate(['username', 'payments'], function(p) {
+          console.log("Incomplet", p);
+      });
 
+      // 2. Création du paiement avec structure stricte
       await Pi.createPayment({
         amount: 1,
-        memo: "Don de soutien",
-        metadata: { productId: "don-001" },
-        callbacks: {
-          onReadyForServerApproval: function(paymentId) {
-            console.log("Approbation serveur pour ID:", paymentId);
-            return fetch('https://wadcox44-github-io.vercel.app/api/approve', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ paymentId: paymentId })
-            }).then(res => res.json());
-          },
-          onReadyForServerCompletion: function(paymentId, txid) {
-            alert("Succès ! TXID: " + txid);
-          },
-          onCancel: function(paymentId) { console.log("Annulé"); },
-          onError: function(error, payment) { alert("Erreur SDK: " + error.message); }
+        memo: "Soutien projet",
+        metadata: { productId: "don-001" }
+      }, {
+        onReadyForServerApproval: function(paymentId) {
+          return fetch('https://wadcox44-github-io.vercel.app/api/approve', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ paymentId: paymentId })
+          }).then(function(res) { return res.json(); });
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          alert("Paiement réussi !");
+        },
+        onCancel: function(paymentId) {
+          console.log("Annulé");
+        },
+        onError: function(error, payment) {
+          alert("Erreur SDK : " + error.message);
         }
       });
     } catch (err) {
-      alert("Erreur système : " + err.message);
+      alert("Erreur : " + err.message);
     }
   }
 
-  // Liaison directe
+  // Liaison
   document.getElementById('pay_button').onclick = donnerPi;
 </script>
     
 </body>
 </html>
+
 
 
 
